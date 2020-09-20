@@ -1,0 +1,1 @@
+web: gunicorn toplearn_eshop.wsgi
