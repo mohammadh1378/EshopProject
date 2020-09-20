@@ -1,0 +1,32 @@
+{% extends 'shared/_MainLayout.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <div id="contact-page" class="container">
+        <div class="bg">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="contact-form">
+                        <h2 class="title text-center">حساب کاربری</h2>
+                        <div class="status alert alert-success" style="display: none"></div>
+                        <form id="main-contact-form" class="contact-form row" name="contact-form" method="post"
+                              action="">
+                            {% csrf_token %}
+                            <div class="form-group col-md-6">
+                                {{ user_form }}
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                {{ profile_form }}
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <input type="submit" name="submit" class="btn btn-primary pull-left" value="ثبت مشخصات">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

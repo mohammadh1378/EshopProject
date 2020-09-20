@@ -1,0 +1,159 @@
+{% extends 'shared/_MainLayout.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+    <section id="cart_items">
+        <div class="container">
+            {% if messages %}
+                <div class="alert alert-danger">
+                    <ul class="text-danger">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">
+                                {{ message|safe }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <div class="breadcrumbs">
+                <ol class="breadcrumb">
+                    <li><a href="/">خانـه</a></li>
+                    <li class="active">لیست محصولات موجود در سبد خرید شما</li>
+                </ol>
+            </div><!--/breadcrums-->
+            {% with total_items=cart|length %}
+                {% if total_items > 0 %}
+                    {#            {% if cart != None and item|length > 0 %}#}
+                    <div class="table-responsive cart_info">
+                        <table class="table table-condensed">
+                            <thead>
+                            <tr class="cart_menu">
+                                <td class="image">کـالا</td>
+                                <td class="description"></td>
+                                <td class="price">قیمت</td>
+                                <td class="quantity">تعـداد</td>
+                                <td class="total">مجمـوع</td>
+                                <td></td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in cart %}
+                                {% with product=item.product %}
+                                    <tr>
+                                        <td class="cart_product">
+                                            <a href="{{ product.get_absolute_url }}"><img src="{{ product.image.url }}"
+                                                                                          alt="{{ product.title }}"
+                                                                                          style="width: 110px;height: 110px"></a>
+                                        </td>
+                                        <td class="cart_description" style="text-align: center;">
+                                            <h4><a href="{{ product.get_absolute_url }}">{{ product.title }}</a></h4>
+                                            <p>شناسـه : {{ product.id }}</p>
+                                        </td>
+                                        <td class="cart_price">
+                                            <p>{{ product.price }} ريال</p>
+                                        </td>
+                                        <td class="cart_quantity">
+                                            <div class="cart_quantity_button">
+                                        <span>
+                                            <form action="{% url "cart:cart_add" product.id %}" method="post">
+                                                {{ item.update_quantity_form.quantity }}
+                                                {{ item.update_quantity_form.override }}<br>
+                                                <input type="submit" value="بروز کردن تعداد">
+                                                {% csrf_token %}
+                                            </form>
+                                        </span>
+                                            </div>
+                                        </td>
+                                        <td class="cart_total">
+                                            <p class="cart_total_price">{{ cart.get_total_price }} ريال</p>
+                                        </td>
+                                        <td class="cart_delete">
+                                            <form action="{% url "cart:cart_remove" product.id %}"
+                                                  method="post" id="delete_form">
+                                                <a class="cart_quantity_delete"
+                                                   onclick="document.getElementById('delete_form').submit()"><i
+                                                        class="fa fa-times"></i></a>
+                                                {% csrf_token %}
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endwith %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    </div>
+                    </section>
+
+                    <section id="do_action">
+                    <div class="container">
+                    {#            <div class="heading">#}
+                    {#                <h3>نهایی کردن سفارش یا <a href="{% url 'products_list' %}">ادامه خریـد</a> ؟! </h3>#}
+                    {#                <p>در صورتیکـه کوپن خریـد و یا کد تخفیف داریـد میتوانید از آن استفاده نمایید | با استفاده از بخش مربوطه#}
+                    {#                    هزینه حمل و نقل خود را محاسبـه نمایید</p>#}
+                    {#            </div>#}
+                    <div class="row">
+                        {#                <div class="col-sm-6">#}
+                        {#                    <div class="chose_area">#}
+                        {#                        <ul class="user_option">#}
+                        {#                            <li>#}
+                        {#                                <h3>استفاده از کوپـن خریـد / کارت تخفیـف :</h3>#}
+                        {#                            </li>#}
+                        {#                            <li class="single_field zip-field">#}
+                        {#                                <input type="text" placeholder="کد تخفیف خود را وارد نمایید ...">#}
+                        {#                            </li>#}
+                        {#                            <li>#}
+                        {#                                <a class="btn btn-default update" href="">بررسی و اعمال</a>#}
+                        {#                            </li>#}
+                        {#                        </ul>#}
+                        {#                        <ul class="user_info">#}
+                        {#                            <h3>محاسبـه هزینـه حمل و نقل</h3>#}
+                        {#                            <li class="single_field">#}
+                        {#                                <label>استان :</label>#}
+                        {#                                <select>#}
+                        {#                                    <option>تهـران</option>#}
+                        {#                                    <option>اصفهان</option>#}
+                        {#                                    <option>آذربایجان غربـی</option>#}
+                        {#                                    <option>آذربایجان شرقـی</option>#}
+                        {#                                </select>#}
+                        {##}
+                        {#                            </li>#}
+                        {#                            <li class="single_field">#}
+                        {#                                <label>شهر / منطقه</label>#}
+                        {#                                <select>#}
+                        {#                                    <option>تهران</option>#}
+                        {#                                    <option>اصفهان</option>#}
+                        {#                                    <option>خـوی</option>#}
+                        {#                                    <option>تبریـز</option>#}
+                        {#                                </select>#}
+                        {##}
+                        {#                            </li>#}
+                        {#                            <li class="single_field zip-field">#}
+                        {#                                <label>کد پستی :</label>#}
+                        {#                                <input type="text">#}
+                        {#                            </li>#}
+                        {#                        </ul>#}
+                        {#                        <a class="btn btn-default update" href="">محاسبـه هزینـه حمل و نقـل</a>#}
+                        {#                    </div>#}
+                        {#                </div>#}
+                        <div class="col-sm-6">
+                            <div class="total_area">
+                                <ul>
+                                    <li>مجمـوع سبـد خریـد <span>{{ cart.get_total_price }}  ريال</span></li>
+                                    <li>هزینـه حمل و نقـل <span>رایـگان</span></li>
+                                    <li>مجمـوع <span>{{ cart.get_total_price }} ريال</span></li>
+                                </ul>
+                                {#                        <a class="btn btn-default update" href="{% url 'products_list' %}">به روز رسانی سبـد خریـد </a>#}
+                                <a class="btn btn-default check_out" href="{% url 'orders:order_create' %}">ادامه ی
+                                    فرآیند خرید</a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning">
+                        <p>سبد خرید شما خالی میباشد</p>
+                    </div>
+                {% endif %}
+            {% endwith %}
+            </div>
+            </section>
+{% endblock %}

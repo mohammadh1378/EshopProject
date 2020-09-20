@@ -1,0 +1,178 @@
+{% extends 'shared/_MainLayout.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+
+    <section id="cart_items">
+        <div class="container">
+            {% if messages %}
+                <div class="alert alert-danger">
+                    <ul class="text-danger">
+                        {% for message in messages %}
+                            <li class="{{ message.tags }}">
+                                {{ message|safe }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <div class="breadcrumbs">
+                <ol class="breadcrumb">
+                    <li><a href="/">خانـه</a></li>
+                    <li class="active">پرداخت</li>
+                </ol>
+            </div><!--/breadcrums-->
+            <div class="review-payment">
+                <h2>مشاهـده و پرداخت</h2>
+            </div>
+            <div class="table-responsive cart_info">
+                <table class="table table-condensed">
+                    <thead>
+                    <tr class="cart_menu">
+                        <td class="image">کـالا</td>
+                        <td class="description">توضیحات</td>
+                        <td class="price">قیمت</td>
+                        <td class="quantity">تعـداد</td>
+                        <td class="total">مجمـوع</td>
+                        <td></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in cart %}
+                        <tr>
+                            <td class="cart_product">
+                                <a href="{{ item.product.get_absolute_url }}"><img src="{{ item.product.image.url }}"
+                                                                                   alt="{{ item.product.title }}"
+                                                                                   width="100" height="100"></a>
+                            </td>
+                            <td class="cart_description" style="text-align: center;">
+                                <h4><a href="{{ item.product.get_absolute_url }}">{{ item.product.title }}</a></h4>
+                                <p>شناسـه : {{ item.product.id }}</p>
+                            </td>
+                            <td class="cart_price" style="text-align: center">
+                                <p>{{ item.product.price }} ريال</p>
+                            </td>
+                            <td class="cart_quantity">
+                                <div class="cart_quantity_button" style="text-align: center">
+                                    {#                                    <a class="cart_quantity_up" href=""> + </a>#}
+                                    {#                                    <input class="cart_quantity_input" type="text" name="quantity" value="1"#}
+                                    {#                                           autocomplete="off" size="2">#}
+                                    {#                                    <a class="cart_quantity_down" href=""> - </a>#}
+                                    {{ item.quantity }}
+                                </div>
+                            </td>
+                            <td class="cart_total">
+                                <p class="cart_total_price" style="text-align: center">{{ item.total_price }} ريال</p>
+                            </td>
+                            {#							<td class="cart_delete">#}
+                            {#								<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>#}
+                            {#							</td>#}
+                        </tr>
+                    {% endfor %}
+
+                    <tr style="border-top: 2px solid #FD9A15">
+                        <td colspan="4">&nbsp;</td>
+                        <td colspan="2">
+                            <table class="table table-condensed total-result" style="font-size: 13pt">
+                                <tr>
+                                    <td>مجمـوع سبـد خریـد</td>
+                                    <td>{{ cart.get_total_price }} ريال</td>
+                                </tr>
+                                <tr class="shipping-cost">
+                                    <td>هزینـه حمل و نقـل</td>
+                                    <td>رایـگان</td>
+                                </tr>
+                                <tr>
+                                    <td>مجمـوع</td>
+                                    <td><span>{{ cart.get_total_price }} ريال</span></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="shopper-informations">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="shopper-info" style="margin-bottom: 50px;">
+                            <p>اطلاعات خریدار</p>
+                            <form method="post" id="order_create_form">
+                                {{ form }}
+                                {% csrf_token %}
+                                {#								<input type="text" placeholder="نام و نام خانوادگی">#}
+                                {#								<input type="text" placeholder="نام کاربری">#}
+                                {#								<input type="password" placeholder="رمز عبور">#}
+                                {#								<input type="password" placeholder="تأیید رمز عبور">#}
+                                <a class="btn btn-primary"
+                                   onclick="document.getElementById('order_create_form').submit()">پرداخت و ثبت
+                                    نهایی سفارش</a>
+
+                            </form>
+                        </div>
+                    </div>
+                    {#                    <div class="col-sm-8 clearfix">#}
+                    {#                        <div class="bill-to">#}
+                    {#                            <p>اطلاعات حمل</p>#}
+                    {#                            <div class="form-one">#}
+                    {#                                <form method="post" id="order_create_form">#}
+                    {#                                    {{ form.city }}#}
+                    {#                                    {{ form.postal_code }}#}
+                    {#                                    {{ form.address }}#}
+                    {#                                    {% csrf_token %}#}
+                    {#                                    <a class="btn btn-primary"#}
+                    {#                                       onclick="document.getElementById('order_create_form').submit()">پرداخت و ثبت#}
+                    {#                                        نهایی سفارش</a>#}
+                    {#                                </form>#}
+                    {#                            </div>#}
+                    {#                        </div>#}
+                    {#                    </div>#}
+                    {#					<div class="col-sm-9 clearfix">#}
+                    {#						<div class="bill-to">#}
+                    {#							<p>اطلاعات حمل</p>#}
+
+                    {#							<div class="form-one">#}
+                    {#								<form>#}
+                    {#									<input type="text" placeholder="نام شرکت">#}
+                    {#									<input type="text" placeholder="* ایمیـل" class="important-field">#}
+                    {#									<input type="text" placeholder="عنـوان">#}
+                    {#									<input type="text" class="important-field" placeholder="* نـام">#}
+                    {#									<input type="text" class="important-field" placeholder="* نام خانوادگـی">#}
+                    {#									<input type="text" class="important-field" placeholder="* آدرس 1">#}
+                    {#									<input type="text" placeholder="آدرس 2">#}
+                    {#								</form>#}
+                    {#							</div>#}
+                    {#							<div class="form-two">#}
+                    {#								<form>#}
+                    {#									<input type="text" class="important-field" placeholder="* کد پستـی">#}
+                    {#									<select class="important-field">#}
+                    {#										<option>-- استـان --</option>#}
+                    {#										<option>تهـران</option>#}
+                    {#										<option>تهـران</option>#}
+                    {#										<option>تهـران</option>#}
+                    {#										<option>تهـران</option>#}
+                    {#										<option>تهـران</option>#}
+                    {#										<option>تهـران</option>#}
+                    {#									</select>#}
+                    {#									<select class="important-field">#}
+                    {#										<option>-- شهـر / منطقـه --</option>#}
+                    {#										<option>تهـران</option>#}
+                    {#										<option>تهـران</option>#}
+                    {#										<option>تهـران</option>#}
+                    {#										<option>تهـران</option>#}
+                    {#										<option>تهـران</option>#}
+                    {#										<option>تهـران</option>#}
+                    {#									</select>#}
+                    {#									<input type="text" class="important-field" placeholder="* شمـاره تماس">#}
+                    {#									<input type="text" placeholder="موبایـل">#}
+                    {#									<input type="text" placeholder="فکـس">#}
+                    {#								</form>#}
+                    {#							</div>#}
+                    {#						</div>#}
+                    {#					</div>#}
+
+                </div>
+            </div>
+
+        </div>
+    </section> <!--/#cart_items-->
+{% endblock %}

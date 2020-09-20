@@ -1,0 +1,9 @@
+{% extends "shared/_MainLayout.html" %}
+{% block title %}سفارش شما با موفقیت ثبت شد{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="alert alert-success">
+            <p>سفارش شما با موفقیت ثبت شد، کد رهگیری سفارش شما <strong>{{ order.id }}</strong> میباشد</p>
+        </div>
+    </div>
+{% endblock %}
